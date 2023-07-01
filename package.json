@@ -1,0 +1,11 @@
+{
+  "name": "bank-v2",
+  "version": "1.0.0",
+  "description": "bank project redone using RestAPI",
+  "main": "index.js",
+  "author": "Gabriel Grinstein",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
