@@ -9,9 +9,19 @@ import NotFound from "./pages/NotFound";
 import Trial from "./pages/Trial";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-// Context data gets DELTED AFTER PAGE REFRESH
+// Context data gets DELETED AFTER PAGE REFRESH
 export const AuthContext = createContext(null);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      suspense: true,
+    },
+  },
+});
 
 function App() {
   return (
@@ -22,6 +32,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="createaccount" element={<CreateAccount />} />
             <Route path="login" element={<Login />} />
+
             <Route
               path="trial"
               element={

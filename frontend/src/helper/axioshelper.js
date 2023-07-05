@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function axiosLogin(userObj, user, navigate) {
+function axiosLogin(userObj, user, navigate) {
   axios
     .post("https://betterbank.herokuapp.com/login", userObj)
     .then((response) => {
@@ -24,7 +24,26 @@ export function axiosLogin(userObj, user, navigate) {
     .catch((err) => console.error("axios ERROR", err.message));
 }
 
-export async function axiosAuthorizeUserTokens({
+export async function axiosAuthUserTokens({ user = "", token }) {
+  console.log("222 axiosAuthUserTokens FUNCTION 222");
+
+  try {
+    const response = await axios.post(
+      "https://betterbank.herokuapp.com/login",
+      { name: "hey" },
+      { headers: { "Authorization": `Bearer ${token}` } }
+    );
+    console.log("axios response", response);
+    // setJwt(token);
+    return response.json();
+    //
+  } catch (err) {
+    console.error("axios ERROR", err.message);
+    return err.message;
+  }
+}
+
+async function axiosAuthorizeUserTokens({
   user,
   token,
   setJwt,
@@ -32,39 +51,37 @@ export async function axiosAuthorizeUserTokens({
   setShowModal,
   logout,
 }) {
-  console.log("authorizeUserTokens FUNCTION");
+  console.log("axiosAuthorizeUserTokens FUNCTION");
 
   try {
     const response = await axios.post(
       "https://betterbank.herokuapp.com/authorize",
       user,
-      {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      }
+      { headers: { "Authorization": `Bearer ${token}` } }
     );
     console.log("axios response", response);
+    // setJwt(token);
+    //
   } catch (err) {
     console.error("axios ERROR", err.message);
-    if (err.message === "Network Error") setServerDown(true);
-    //
-    // Else if: Token sent to /authorize was null -->
-    // send request for new access token using refresh token
-    else if (err.message === "Request failed with status code 401") {
-      const refreshToken = localStorage.getItem("refresh token");
-      // If No refresh token either --> Log user out
-      if (refreshToken == null || !refreshToken) logout();
 
-      _getNewAccessToken(refreshToken, setJwt, setShowModal, logout);
-    }
-    //
-    // Else If Invalid token --> Log user out
-    else if (err.message === "Request failed with status code 403") {
-      logout();
-    } else {
-      // Show NotAuthorized
-      setShowModal(true);
+    switch (err.message) {
+      case "Network Error":
+        setServerDown(true);
+        break;
+      case "Request failed with status code 401":
+        const refreshToken = localStorage.getItem("refresh token");
+        // If No refresh token either --> Log user out
+        if (refreshToken == null || !refreshToken) logout();
+        // Else --> Get New Access Token
+        _getNewAccessToken(refreshToken, setJwt, setShowModal, logout);
+        break;
+      case "Request failed with status code 403":
+        logout();
+        break;
+      default:
+        // Show NotAuthorized
+        setShowModal(true);
     }
   }
 }
@@ -75,15 +92,15 @@ function _getNewAccessToken(refreshToken, setJwt, setShowModal, logout) {
       token: refreshToken,
     })
     .then((response) => {
-      console.log("newaccesstoken response", response);
+      console.log("new accesstoken response", response);
       localStorage.setItem("token", response.data.accessToken);
       setJwt(response.data.accessToken);
     })
     .catch((err) => {
-      console.error("newaccesstoken Error", err.message);
+      console.error("new accesstoken Error", err.message);
       if (err.message === "Request failed with status code 403") logout();
       else setShowModal(true);
     });
 }
 
-export default { axiosLogin, axiosAuthorizeUserTokens };
+export { axiosLogin, axiosAuthorizeUserTokens };
