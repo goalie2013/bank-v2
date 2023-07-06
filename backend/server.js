@@ -1,9 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-// const dal = require("./dal");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
-// const { verifyTokenExists, generateToken } = require("./authServer");
+const { authenticateToken } = require("./middleware/auth");
+// const dal = require("./dal");
 // const port = process.env.PORT;
 
 const authRoutes = require("./routes/authRoutes");
@@ -21,6 +20,17 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 app.use("/auth", authRoutes);
+
+// Example protected route, requires a valid JWT
+app.get("/protected", authenticateToken, (req, res) => {
+  console.log("/authorize req.user", req.user);
+  const user = req.user;
+
+  res.json({
+    message: "User Authorized",
+    user,
+  });
+});
 
 // Run the Server
 app.listen(process.env.PORT || 5000, "0.0.0.0", () =>

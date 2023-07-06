@@ -5,9 +5,15 @@ const useAuthFetch = (token) => {
   return useQuery({
     queryKey: ["user-auth"],
     queryFn: async () => {
-      //const {data} = await axios.get('https')
+      const response = await axios.get("/api/protected", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) {
+        throw new Error("Network Error");
+      }
+      const data = response.json;
       // return data
-      const { data } = axiosAuthUserTokens({ token });
+      // const { data } = axiosAuthUserTokens({ token });
       console.log("queryFn data", data);
       return data;
     },

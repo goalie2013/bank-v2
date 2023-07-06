@@ -1,27 +1,47 @@
 import axios from "axios";
 
-function axiosLogin(userObj, user, navigate) {
-  axios
-    .post("https://betterbank.herokuapp.com/login", userObj)
-    .then((response) => {
-      console.log("axios response", response);
-      console.log("axios response", response.data.accessToken);
-
-      // Reset context if user already created bc don't want id bug
-      user = {};
-      user = { ...userObj };
-
-      // Reset localStorage token in case not empty, then add new token
+const resetTokenLocal = (accessToken, refreshToken) => {
+  // Reset localStorage token in case not empty, then add new token
+  return new Promise((resolve, reject) => {
+    try {
       localStorage.removeItem("token");
       localStorage.removeItem("refresh token");
-      localStorage.setItem("token", response.data.accessToken);
-      localStorage.setItem("refresh token", response.data.refreshToken);
-    })
-    .then(() => {
-      console.log("Successful Login! Navigate to Deposit...");
-      navigate(`/deposit/${userObj.id}`, { replace: true });
-    })
-    .catch((err) => console.error("axios ERROR", err.message));
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("refresh token", refreshToken);
+      resolve(true);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+async function axiosLogin(userObj, user, navigate) {
+  try {
+    const response = await axios.post(
+      "https://betterbank.herokuapp.com/login",
+      userObj
+    );
+    console.log("axios response", response);
+    console.log("axios response", response.data.accessToken);
+
+    // Reset context if user already created bc don't want id bug
+    // user = {};
+    // user = { ...userObj };
+
+    // Reset localStorage token in case not empty, then add new token
+    // const data = response.data;
+    const { accessToken, refreshToken } = response.data;
+    const bool = await resetTokenLocal(accessToken, refreshToken);
+    console.log("bool", bool);
+
+    console.log("Successful Login! Navigate to Deposit...");
+    bool
+      ? navigate(`/deposit/${userObj.id}`, { replace: true })
+      : (() => {
+          throw new Error("Error resetting token in local storage");
+        })();
+  } catch (err) {
+    console.error("axios ERROR", err.message);
+  }
 }
 
 export async function axiosAuthUserTokens({ user = "", token }) {
