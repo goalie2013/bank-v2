@@ -1,20 +1,31 @@
+import axios from "axios";
+
 // TODO: Change to axios or React Query
-function useData(url) {
+function useFetchData(url, method, options) {
   const [data, setData] = useState(null);
+
   useEffect(() => {
-    if (url) {
-      let ignore = false;
-      fetch(url)
-        .then((response) => response.json())
-        .then((json) => {
-          if (!ignore) {
-            setData(json);
-          }
-        });
-      return () => {
-        ignore = true;
-      };
+    const fetchData = async () => {
+      if (url) {
+        let ignore = false;
+        const response =
+          method === "GET"
+            ? await axios.get(url)
+            : await axios.post(url, options.user, options.headers);
+
+        if (!ignore) setData(response.json());
+
+        return () => {
+          ignore = true;
+        };
+      }
+    };
+    try {
+      fetchData();
+    } catch (e) {
+      console.error(e.message);
     }
   }, [url]);
+
   return data;
 }

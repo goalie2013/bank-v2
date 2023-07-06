@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../App";
+import { AuthContext } from "../../App";
 
 export default function Header() {
   const { onLogin, onLogout } = useContext(AuthContext);
