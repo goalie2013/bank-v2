@@ -32,4 +32,24 @@ function authenticateToken(req, res, next) {
   next();
 }
 
-module.exports = { authenticateToken };
+// Sample user data (replace with your own user model)
+const users = [
+  { id: 1, username: "john", email: "j.john@gmail.com", password: "password1" },
+  { id: 2, username: "jane", email: "jane2063@aws.com", password: "password2" },
+];
+
+async function checkUserAuthentication(req, res, next) {
+  const { username, password } = req.body;
+  const user = users.find((user) => user.username === username);
+  const passwordMatch = await bcrypt.compare(password, user.password);
+
+  // Check Authentication
+  if (!user) return res.status(401).json({ error: "Authentication failed" });
+  if (!passwordMatch)
+    return res.status(401).json({ error: "Authentication failed" });
+
+  req.user = user;
+  next();
+}
+
+module.exports = { authenticateToken, checkUserAuthentication };

@@ -1,0 +1,28 @@
+
+- MERN Stack
+    - REST API
+    - Vite & Vitest + yarn
+
+
+- Styling
+    - Styled Components
+    - className Functions
+
+- React Query
+    - Cache
+        - Cache Invalidation
+    - Queries & Mutations
+
+
+- Auth
+    - JWT Token-based
+        - Authentication Middleware (Express)
+    - OAuth2.0/OpenIDConnect (Google Sign In)
+    - Bcrypt hashed password
+
+
+- React Router
+    - Nested Routes
+    - Indexed Routes
+    - Relative Paths
+

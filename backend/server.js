@@ -3,9 +3,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const { authenticateToken } = require("./middleware/auth");
 // const dal = require("./dal");
-// const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const app = express();
 // CORS FOR DEVELOPMENT ONLY
 app.use(cors());
@@ -19,9 +20,24 @@ app.use(bodyParser.json());
 // serve images, CSS files, and JS files in a directory named 'public'
 app.use(express.static("public"));
 
-app.use("/auth", authRoutes);
+// Connect to Database
+// try {
+//   connectDB();
+// } catch (err) {
+//   if (err.message === "Error connecting to Database") {
+//     res.status(500).send("500 Internal Server Error");
+//   }
+// }
 
-// Example protected route, requires a valid JWT
+app.use("/auth", authRoutes);
+app.use("/", userRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Hello there World!!");
+});
+
+// Protected Route requires Authorization
+// by checking for valid JWT Access Token
 app.get("/protected", authenticateToken, (req, res) => {
   console.log("/authorize req.user", req.user);
   const user = req.user;
@@ -33,6 +49,6 @@ app.get("/protected", authenticateToken, (req, res) => {
 });
 
 // Run the Server
-app.listen(process.env.PORT || 5000, "0.0.0.0", () =>
-  console.log(`My server is running on port ${process.env.PORT}`)
+app.listen(port, "0.0.0.0", () =>
+  console.log(`My server is running on port ${port}`)
 );

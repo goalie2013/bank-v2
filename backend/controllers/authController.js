@@ -1,23 +1,21 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// Sample user data (replace with your own user model)
-const users = [
-  { id: 1, username: "john", email: "j.john@gmail.com", password: "password1" },
-  { id: 2, username: "jane", email: "jane2063@aws.com", password: "password2" },
-];
-
 // Register a new user
 async function register(req, res) {
+  const saltRounds = 10;
   try {
-    const { name: username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("req.body", req.body);
+    const { username, email, password } = req.body;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
     // Save the user to your database or any storage mechanism
     // createUser({ name, email, password})
+    console.log("username", username, "hashedPassword", hashedPassword);
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (e) {
-    console.error("register Error", e.message);
+    console.error("register Error:", e.message);
     res.status(500).json({ error: "Registration failed" });
   }
 }
@@ -26,15 +24,9 @@ async function register(req, res) {
 // Log In --> Generate & Send JWT Token
 ////////////////////////////////////////////////////////////////
 async function login(req, res) {
+  console.log("authController login()");
   try {
-    const { username, password } = req.body;
-    const user = users.find((user) => user.username === username);
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    // Check Authentication
-    if (!user) return res.status(401).json({ error: "Authentication failed" });
-    if (!passwordMatch)
-      return res.status(401).json({ error: "Authentication failed" });
+    const user = req.user;
 
     // Get new Access & Refresh Tokens
     const accessToken = generateToken(user, process.env.TOKEN_SECRET, 60 * 15);
@@ -44,7 +36,7 @@ async function login(req, res) {
 
     // Add Refresh Token to Token List in DB
     addRefreshTokenToDB();
-    // Return Tokens to Client
+    // Return tokens to Client
     res.json({ accessToken, refreshToken });
   } catch (e) {
     console.error("Login Error", e.message);
@@ -66,7 +58,37 @@ async function addRefreshTokenToDB() {
   }
 }
 
+////////////////////////////////////////////////////////////////
+// Log In via OAuth2 Token --> Generate & Send JWT Token
+////////////////////////////////////////////////////////////////
+async function loginGoogle(req, res) {
+  const { idToken } = req.body;
+
+  /*
+  // Verify the ID token with the OAuth2 provider
+  // verifyOAuth2Token(idToken) # placeholder function
+  //   .then((userData) => {
+  //     const { userId, email } = userData;
+
+  // Check if user exists in DB
+  const user = getUserByEmail(email);
+  if (!user) return res.status(401).json({ error: "User not found" });
+
+  // Generate JWT token
+  const token = jwt.sign({ userId, email }, "secretKey", { expiresIn: "1h" });
+
+  // Return token to Client
+  res.json({ token });
+  // END OF .then()
+  /* .catch((error) => {
+      // Handle error when verifying the OAuth2 token
+      res.status(401).json({ error: 'Invalid OAuth2 token' });
+    }); 
+  */
+}
+
 module.exports = {
   register,
   login,
+  loginGoogle,
 };
