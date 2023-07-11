@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
-import { COLORS } from "../themes";
-import { StyledCard, CardHeader, cardStatusTextStyles } from "./cardStyles";
+import { COLORS } from "../../themes";
+import { StyledCard, CardHeader, CardStatusText } from "./cardStyles";
 
 // Dynamic Styles
 export default function CustomCard(props) {
@@ -42,13 +42,13 @@ export default function CustomCard(props) {
 
         {/* Status Text */}
         {props.statusText && (
-          <div
+          <CardStatusText
             className={classesAlert(props.statusColor)}
             role="alert"
             style={{ cardStatusTextStyles }}
           >
             {props.statusText}
-          </div>
+          </CardStatusText>
         )}
       </Card.Body>
     </StyledCard>

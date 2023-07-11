@@ -2,7 +2,6 @@ import { Navigate } from "react-router-dom";
 import useAuthFetch from "../queries";
 import { useQueryClient } from "@tanstack/react-query";
 
-//TODO: Get JWT token to check auth
 const ProtectedRouteProps = ({ renderItem }) => {
   console.log("ProtectedRouteProps");
 
@@ -12,6 +11,7 @@ const ProtectedRouteProps = ({ renderItem }) => {
   if (!token) {
     console.warn("NO TOKEN! Returning to Home...");
     return <Navigate to="/" replace />;
+    // onLogout()
   }
 
   // const queryClient = useQueryClient();
@@ -22,12 +22,18 @@ const ProtectedRouteProps = ({ renderItem }) => {
     console.error("Error:", error.message);
     // return <span>Error: {error.message}</span>;
     return <Navigate to="/" replace />;
-    // TODO: Erase token? Sign user out?
+    // TODO: Update return component; Erase token? Sign user out?
   }
 
-  const isStatus = status;
+  if (status === "loading") {
+    console.log("LOADING...");
+    // return <Loading />
+    return <h3>Loading</h3>;
+  }
 
-  return renderItem(isStatus, data);
+  // const isStatus = status;
+
+  return renderItem(data);
 };
 
 export default ProtectedRouteProps;

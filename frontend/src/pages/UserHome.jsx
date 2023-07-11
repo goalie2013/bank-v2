@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../App";
 import styled from "styled-components";
 
-export default function UserHome({ data, isStatus }) {
+export default function UserHome({ data }) {
   console.log("UserHome Component");
 
   const { onLogin, onLogout } = useContext(AuthContext);
@@ -12,10 +12,6 @@ export default function UserHome({ data, isStatus }) {
     text-align: center;
     color: #cd4f32;
   `;
-
-  if (isStatus === "loading") {
-    console.warn("LOADING");
-  }
 
   console.log("data", data);
 
