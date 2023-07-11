@@ -1,25 +1,33 @@
+const colors = require("colors");
+const jwt = require("jsonwebtoken");
+
 ///////////////////////////////////////////////////////////////////////////////
 // Middleware: Get JWT from Bearer Token Header, Verify it, and return user
 ///////////////////////////////////////////////////////////////////////////////
 function authenticateToken(req, res, next) {
   // const authHeader = req.headers["authorization"];
   // const jwtToken = authHeader && authHeader.split(" ")[1];
-  console.log("authHeader", req.headers["authorization"]);
-  const jwtToken = req.headers?.split(" ")[1];
-  console.log("jwtToken", jwtToken, typeof jwtToken);
+  console.log("authHeader:", req.headers["authorization"]);
+  const jwtToken = req.headers?.authorization.split(" ")[1];
 
-  if (jwtToken == "null") {
-    console.log("jwtToken is null, returning 401");
-    return res.sendStatus(401).json({ error: "Authentication Failed" });
+  console.log("jwtToken:", jwtToken, typeof jwtToken);
+
+  if (!jwtToken || jwtToken == "null") {
+    console.log(colors.red("jwtToken is null, returning 401"));
+    // return res.sendStatus(401).json({ error: "Authentication Failed" });
+    return res.sendStatus(401);
   }
 
-  jwt.verify(jwtToken, process.env.TOKEN_SECRET, (err, user) => {
-    if (err) {
-      console.error("ERROR /authorize", err.message);
+  jwt.verify(jwtToken, process.env.TOKEN_SECRET, (error, user) => {
+    if (error) {
+      console.error("ERROR authorize: ", colors.red(error.message));
       // Invalid/Expired JWT --> Log User Out
-      if (err.message === "jwt malformed")
-        return res.sendStatus(403).json({ error: "Invalid Token" });
-      return res.sendStatus(401).json({ error: "Authentication Failed" });
+      if (error.message === "jwt malformed")
+        // return res.sendStatus(403).json({ error: "Invalid Token" });
+        return res.sendStatus(403);
+
+      // return res.sendStatus(401).json({ error: "Authentication Failed" });
+      return res.sendStatus(401);
     } else {
       console.log("authenticateToken data", user);
       res.user = user;
@@ -29,27 +37,7 @@ function authenticateToken(req, res, next) {
 
   // Token Valid!!
   // req.token = jwtToken;
-  next();
+  // next();
 }
 
-// Sample user data (replace with your own user model)
-const users = [
-  { id: 1, username: "john", email: "j.john@gmail.com", password: "password1" },
-  { id: 2, username: "jane", email: "jane2063@aws.com", password: "password2" },
-];
-
-async function checkUserAuthentication(req, res, next) {
-  const { username, password } = req.body;
-  const user = users.find((user) => user.username === username);
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
-  // Check Authentication
-  if (!user) return res.status(401).json({ error: "Authentication failed" });
-  if (!passwordMatch)
-    return res.status(401).json({ error: "Authentication failed" });
-
-  req.user = user;
-  next();
-}
-
-module.exports = { authenticateToken, checkUserAuthentication };
+module.exports = { authenticateToken };

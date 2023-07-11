@@ -1,15 +1,11 @@
 import Card from "react-bootstrap/Card";
-import { COLORS } from "../themes";
-import {
-  StyledCard,
-  CardHeader,
-  cardStatusTextStyles,
-} from "../styles/cardStyles";
+import { COLORS } from "../../themes";
+import { StyledCard, CardHeader, CardStatusText } from "./cardStyles";
 
 // Dynamic Styles
 export default function CustomCard(props) {
   // Separate Card Header & Body so doesn't have to be the same color
-  function bootstrapClasses() {
+  function classes() {
     const bg = props.bgColor ? " bg-" + props.bgColor : " ";
     const txt = props.txtColor ? " text-" + props.txtColor : " text-black";
     // console.log("bg", bg);
@@ -23,8 +19,9 @@ export default function CustomCard(props) {
   };
 
   return (
-    <StyledCard className="{bootstrapClasses()} kk imageborder">
+    <StyledCard className="{classes()} kk imageborder">
       <CardHeader>{props.header}</CardHeader>
+
       <Card.Body>
         {/* Title */}
         {props.title && (
@@ -45,13 +42,13 @@ export default function CustomCard(props) {
 
         {/* Status Text */}
         {props.statusText && (
-          <div
+          <CardStatusText
             className={classesAlert(props.statusColor)}
             role="alert"
             style={{ cardStatusTextStyles }}
           >
             {props.statusText}
-          </div>
+          </CardStatusText>
         )}
       </Card.Body>
     </StyledCard>

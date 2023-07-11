@@ -1,3 +1,6 @@
+// DEVELOPMENT ONLY
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -7,6 +10,7 @@ const port = process.env.PORT || 5000;
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const MongoDB = require("./database");
 const app = express();
 // CORS FOR DEVELOPMENT ONLY
 app.use(cors());
@@ -22,9 +26,10 @@ app.use(express.static("public"));
 
 // Connect to Database
 // try {
-//   connectDB();
+//   MongoDB.connect();
 // } catch (err) {
 //   if (err.message === "Error connecting to Database") {
+//     MongoDB.disconnect();
 //     res.status(500).send("500 Internal Server Error");
 //   }
 // }
@@ -38,7 +43,7 @@ app.get("/", (req, res) => {
 
 // Protected Route requires Authorization
 // by checking for valid JWT Access Token
-app.get("/protected", authenticateToken, (req, res) => {
+app.get("/api/protected", authenticateToken, (req, res) => {
   console.log("/authorize req.user", req.user);
   const user = req.user;
 

@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
+import styled from "styled-components";
 
-const StyledCard = styled.Card`
+const StyledCard = styled(Card)`
   background: props.bgColor,
   width: "25rem",
   marginTop: "2.5rem",
@@ -28,11 +29,11 @@ const CardHeader = styled.div`
   overflowWrap: "break-word",
 `;
 
-const cardStatusTextStyles = {
+const CardStatusText = styled.div`
   color: props.statusColor,
   marginTop: "0.5rem",
   textAlign: "center",
   boxShadow: "0 0.25rem 1rem rgba(0, 0, 0, 0.3)",
-};
+`;
 
-export { StyledCard, CardHeader, cardStatusTextStyles };
+export { StyledCard, CardHeader, CardStatusText };

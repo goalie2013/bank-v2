@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 /*.env
+
+things-to-mention.txt
+things-to-do.txt

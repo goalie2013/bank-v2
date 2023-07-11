@@ -6,9 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 const ProtectedRoute = ({ children }) => {
   console.log("ProtectedRoute");
 
-  // const { token } = useContext(AuthContext);
   const token = localStorage.getItem("token");
-  console.log("token:", token);
+  console.log("token", token);
 
   if (!token) {
     console.warn("NO TOKEN! Returning to Home...");
@@ -17,7 +16,7 @@ const ProtectedRoute = ({ children }) => {
 
   // const queryClient = useQueryClient();
   const { status, data, error, isFetching } = useAuthFetch({ token });
-  console.log("status:", status, "data", data, "error", error);
+  console.log("status:", status, "data", data, "error", error.message);
 
   return children;
 };
