@@ -7,7 +7,8 @@ const AuthProvider = ({ children }) => {
 
   //TODO: Get JWT token to store in local storage
   const handleLogin = async () => {
-    console.log("handleLogin");
+    console.log("handleLogin()");
+
     localStorage.setItem("token", "login tokenr3wer23r");
     navigate("trial");
   };

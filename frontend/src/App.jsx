@@ -3,11 +3,13 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import AuthProvider from "./components/AuthProvider";
 import Home from "./pages/Home";
+import UserHome from "./pages/UserHome";
 import Login from "./pages/Login";
 import CreateAccount from "./pages/Account/CreateAccount";
 import NotFound from "./pages/NotFound";
 import Trial from "./pages/Trial";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRouteProps from "./components/ProtectedRouteProps";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -41,6 +43,18 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="user" element={<UserLayout />}>
+              <Route
+                index
+                element={
+                  <ProtectedRouteProps
+                    renderItem={(data, isStatus) => (
+                      <UserHome status={isStatus} data={data} />
+                    )}
+                  />
+                }
+              />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

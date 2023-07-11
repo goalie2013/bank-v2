@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
+import styled from "styled-components";
 
-const StyledCard = styled.Card`
+const StyledCard = styled(Card)`
   background: props.bgColor,
   width: "25rem",
   marginTop: "2.5rem",

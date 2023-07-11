@@ -3,8 +3,8 @@ import useAuthFetch from "../queries";
 import { useQueryClient } from "@tanstack/react-query";
 
 //TODO: Get JWT token to check auth
-const ProtectedRoute = ({ children }) => {
-  console.log("ProtectedRoute");
+const ProtectedRouteProps = ({ renderItem }) => {
+  console.log("ProtectedRouteProps");
 
   const token = localStorage.getItem("token");
   console.log("token", token);
@@ -18,7 +18,16 @@ const ProtectedRoute = ({ children }) => {
   const { status, data, error, isFetching } = useAuthFetch({ token });
   console.log("status:", status, "data", data, "error", error.message);
 
-  return children;
+  if (status === "error") {
+    console.error("Error:", error.message);
+    // return <span>Error: {error.message}</span>;
+    return <Navigate to="/" replace />;
+    // TODO: Erase token? Sign user out?
+  }
+
+  const isStatus = status;
+
+  return renderItem(isStatus, data);
 };
 
-export default ProtectedRoute;
+export default ProtectedRouteProps;

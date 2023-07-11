@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { AuthContext } from "../App";
+import Card from "../components/Card";
 
 export default function Trial() {
   // const { token } = useContext(AuthContext);
@@ -12,10 +11,16 @@ export default function Trial() {
       {!token ? (
         <h1>Not Allowed</h1>
       ) : (
-        <>
-          <h1>TRIAL PAGE</h1>
-          <h3>Token: {token}</h3>
-        </>
+        <Card
+          bgColor="cyan"
+          title="My Title"
+          body={
+            <>
+              <h1>TRIAL PAGE</h1>
+              <h3>Token: {token}</h3>
+            </>
+          }
+        ></Card>
       )}
     </>
   );

@@ -9,10 +9,27 @@ const useAuthFetch = (token) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) {
-        throw new Error("Network Error");
+        throw new Error("Error Authorizing Token");
       }
       const data = response.json;
-      // return data
+      // const { data } = axiosAuthUserTokens({ token });
+      console.log("queryFn data", data);
+      return data;
+    },
+  });
+};
+
+const useLogin = (username, password) => {
+  return useQuery({
+    queryKey: ["user-login"],
+    queryFn: async () => {
+      const response = await axios.post("/auth/login", {
+        body: { username, password },
+      });
+      if (!response.ok) {
+        throw new Error("Error Authorizing Token");
+      }
+      const data = response.json;
       // const { data } = axiosAuthUserTokens({ token });
       console.log("queryFn data", data);
       return data;
