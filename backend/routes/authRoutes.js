@@ -5,7 +5,13 @@ const oauth = require("../middleware/oauth");
 const router = express.Router();
 
 // Register a new user
-router.post("/register", authController.register);
+router.post(
+  "/register",
+  authController.register,
+  authController.getNewTokens,
+  authController.addRefreshTokenToDB,
+  authController.loginSuccess
+);
 
 // Log in and generate a JWT
 router.post(

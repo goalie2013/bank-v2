@@ -18,7 +18,7 @@ function authenticateToken(req, res, next) {
     return res.sendStatus(401);
   }
 
-  jwt.verify(jwtToken, process.env.TOKEN_SECRET, (error, user) => {
+  jwt.verify(jwtToken, process.env.TOKEN_SECRET, (error, tokenData) => {
     if (error) {
       console.error("ERROR authorize: ", colors.red(error.message));
       // Invalid/Expired JWT --> Log User Out
@@ -29,8 +29,9 @@ function authenticateToken(req, res, next) {
       // return res.sendStatus(401).json({ error: "Authentication Failed" });
       return res.sendStatus(401);
     } else {
-      console.log("authenticateToken data", user);
-      res.user = user;
+      console.log("authenticateToken data", tokenData);
+      const { name, email } = tokenData;
+      req.user = { name, email };
       next();
     }
   });

@@ -2,12 +2,13 @@ import { createContext } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import AuthProvider from "./components/AuthProvider";
-import Home from "./pages/Home";
+import Home from "./pages/AppHome/Home";
+import About from "./pages/About";
 import UserLayout from "./components/UserLayout";
-import UserHome from "./pages/UserHome";
-import UserHistory from "./pages/UserHistory";
-import Login from "./pages/Login";
-import CreateAccount from "./pages/Account/CreateAccount";
+import UserHome from "./pages/User/UserHome";
+import UserHistory from "./pages/User/UserHistory";
+import Login from "./pages/AppHome/Login";
+import CreateAccount from "./pages/AppHome/CreateAccount";
 import NotFound from "./pages/NotFound";
 import Trial from "./pages/Trial";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -28,6 +29,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="createaccount" element={<CreateAccount />} />
             <Route path="login" element={<Login />} />
+            <Route path="about" element={<About />} />
 
             <Route
               path="trial"

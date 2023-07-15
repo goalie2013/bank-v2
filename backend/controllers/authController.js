@@ -6,21 +6,29 @@ const colors = require("colors");
 ////////////////////////////////////////////////////////////////
 // Register a new user
 ////////////////////////////////////////////////////////////////
-async function register(req, res) {
+async function register(req, res, next) {
   console.log("register()");
   const saltRounds = 10;
   try {
     console.log("req.body", req.body);
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
     // Save the user to your database or any storage mechanism
-    // createUser({ name, email, password, authLevel})
-    console.log("username", username, "hashedPassword", hashedPassword);
+    // const user = await dal.createUser({
+    //   name,
+    //   email,
+    //   password: hashedPassword,
+    // });
+    const user = { name, email };
+    console.log("user", user, "hashedPassword", hashedPassword);
 
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (e) {
-    console.error("register Error:", colors.red(e.message));
+    // res.status(200).json({ user: {name: user.name, email: user.email, balance: user.balance} });
+    // res.status(201).json({ message: "User registered successfully" });
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("register Error:", colors.red(error.message));
     res.status(500).json({ error: "Registration failed" });
   }
 }
@@ -38,15 +46,15 @@ async function checkUserAuthentication(req, res, next) {
   console.log("checkUserAuthentication()");
 
   const { username, password } = req.body;
-  let user, passwordMatch;
+  let user, passwordMatch, passwordMatchTemp;
 
   try {
     // const users = await dal.getAllUsers();
     user = users.find((user) => user.username === username);
     // passwordMatch = await bcrypt.compare(password, user.password);
     passwordMatchTemp = password === user.password;
-  } catch (e) {
-    console.error("Login Error:", colors.red(e.message));
+  } catch (error) {
+    console.error("checkUserAuthentication Error:", colors.red(error.message));
     return res.sendStatus(400);
   }
 
@@ -76,8 +84,8 @@ function getNewTokens(req, res, next) {
     next();
     // Return tokens to Client
     // res.json({ accessToken, refreshToken });
-  } catch (e) {
-    console.error("Login Error", colors.red(e.message));
+  } catch (error) {
+    console.error("getNewTokens Error", colors.red(error.message));
     res.status(500).json({ error: "Login failed" });
   }
 }
@@ -93,8 +101,8 @@ function addRefreshTokenToDB(req, res, next) {
   //   const result = await dal.addRefreshToken(refreshToken, tokenList);
   //   console.log("addRefreshToken result", result);
   //   next();
-  // } catch (err) {
-  //   console.error("addRefreshToken Error:", colors.red(e.message));
+  // } catch (error) {
+  //   console.error("addRefreshToken Error:", colors.red(error.message));
   //   res.status(500).json({ error: "Login failed" });
   // }
 
@@ -103,11 +111,11 @@ function addRefreshTokenToDB(req, res, next) {
 
 // Send Tokens to Client
 function loginSuccess(req, res) {
-  return (req, res) => {
-    console.log("End of /login/google post -> SUCCESS!!");
-    const { accessToken, refreshToken } = req.tokens;
-    res.json({ accessToken, refreshToken, messsage: "Login Successful" });
-  };
+  console.log("loginSuccess()");
+
+  console.log("End of login/register -> SUCCESS!!");
+  const { accessToken, refreshToken } = req.tokens;
+  res.json({ accessToken, refreshToken, messsage: "Login Successful" });
 }
 
 // Helper Function: Generate New Access/Refresh JWT Token

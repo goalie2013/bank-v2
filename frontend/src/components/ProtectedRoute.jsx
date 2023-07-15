@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import useAuthFetch from "../queries";
+import { useAuthFetchUser } from "../queries";
 import { useQueryClient } from "@tanstack/react-query";
 
 //TODO: Get JWT token to check auth
@@ -15,8 +15,10 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // const queryClient = useQueryClient();
-  const { status, data, error, isFetching } = useAuthFetch({ token });
-  console.log("status:", status, "data", data, "error", error.message);
+  const { status, data, error, isFetching } = useAuthFetchUser({ token });
+  console.log("status:", status, "data", data);
+
+  if (status === "error") console.error("error", error.message);
 
   return children;
 };

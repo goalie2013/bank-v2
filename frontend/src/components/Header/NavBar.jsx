@@ -2,8 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../App";
-import moneyBag from "../assets/money-bag.png";
+import { AuthContext } from "../../App";
+import moneyBag from "../../assets/moneyicon.png";
 import NavBarLoggedIn from "./NavBarLoggedIn";
 import NavBarLoggedOut from "./NavBarLoggedOut";
 

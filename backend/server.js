@@ -44,12 +44,11 @@ app.get("/", (req, res) => {
 // Protected Route requires Authorization
 // by checking for valid JWT Access Token
 app.get("/api/protected", authenticateToken, (req, res) => {
-  console.log("/authorize req.user", req.user);
-  const user = req.user;
+  console.log("/protected req.user", req.user);
 
-  res.json({
+  res.status(200).json({
+    ...req.user,
     message: "User Authorized",
-    user,
   });
 });
 
