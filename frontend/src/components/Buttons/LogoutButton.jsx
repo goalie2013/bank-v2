@@ -1,11 +1,12 @@
 import { useContext } from "react";
-import { AuthContext } from "../App";
+import { AuthContext } from "../../App";
+import { LogoutBtn } from "./ButtonStyles";
 
 export default function LogoutButton() {
   const { onLogout } = useContext(AuthContext);
   return (
-    <button type="button" onClick={onLogout}>
+    <LogoutBtn type="button" onClick={onLogout}>
       Logout
-    </button>
+    </LogoutBtn>
   );
 }

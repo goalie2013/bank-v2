@@ -1,4 +1,5 @@
 import Card from "../components/Card/Card";
+import ColorProvider from "../providers/ThemeProvider";
 
 export default function Trial() {
   // const { token } = useContext(AuthContext);
@@ -11,16 +12,18 @@ export default function Trial() {
       {!token ? (
         <h1>Not Allowed</h1>
       ) : (
-        <Card
-          bgColor="cyan"
-          title="My Title"
-          body={
-            <>
-              <h1>TRIAL PAGE</h1>
-              <h3>Token: {token}</h3>
-            </>
-          }
-        ></Card>
+        <ColorProvider>
+          <Card
+            bgColor="cyan"
+            title="My Title"
+            body={
+              <>
+                <h1>TRIAL PAGE</h1>
+                <h3>Token: {token}</h3>
+              </>
+            }
+          ></Card>
+        </ColorProvider>
       )}
     </>
   );

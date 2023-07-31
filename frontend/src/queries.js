@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { TokenValidationError } from "./errors";
+import ApiService from "./service";
 
 // Check token authentication & return user data
 const useAuthFetchUser = (token) => {

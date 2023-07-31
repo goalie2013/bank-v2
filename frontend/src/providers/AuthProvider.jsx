@@ -27,8 +27,8 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem("token", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     setIsLoggedIn(true);
-    // return <Navigate to="user" replace />;
-    navigate("/user");
+    return <Navigate to="user" replace />;
+    // navigate("/user");
   };
 
   const handleLogout = () => {
@@ -39,15 +39,23 @@ const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     // TODO: erase navigation history??
     return <Navigate to="/" replace />;
+    // navigate("/");
+  };
+
+  const handleSuccess = () => {
+    console.log("handleSuccess()");
+    isLoggedIn === false && setIsLoggedIn(true);
   };
 
   const value = {
     onLogin: handleLogin,
     onLogout: handleLogout,
     isLoggedIn,
+    handleSuccess,
   };
 
   console.log("isLoggedIn:", isLoggedIn);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -14,7 +14,8 @@ const ProtectedRouteProps = ({ renderItem }) => {
 
   if (!token) {
     console.warn("NO TOKEN! Returning to Home...");
-    onLogout();
+
+    return onLogout();
   }
 
   // Check for token authentication
@@ -28,9 +29,9 @@ const ProtectedRouteProps = ({ renderItem }) => {
     // TODO: Update return component; Erase token? Sign user out?
     if (error instanceof TokenValidationError)
       console.log("Error Type: Token Validation Error");
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    return <Navigate to="/" replace />;
+    // onLogout()
+
+    return onLogout();
   }
 
   if (status === "loading") {
@@ -38,8 +39,6 @@ const ProtectedRouteProps = ({ renderItem }) => {
     // return <Loading />
     return <h3>Loading</h3>;
   }
-
-  // const isStatus = status;
 
   return renderItem(data);
 };

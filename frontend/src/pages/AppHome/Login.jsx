@@ -4,15 +4,20 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { NetworkError } from "../../errors";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { PageWrapper } from "../styles";
 
 export default function Login() {
-  console.log("LOGIN");
+  console.count("LOGIN");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const formObj = { name, setName, email, setEmail, password, setPassword };
+
   const mutation = useMutation({
+    // NOTE: formData is the data/arguments from .mutate()
     mutationFn: (formData) => {
       console.log("mutateLogInUser()");
       return axios.post("http://localhost:5050/auth/login", formData);
@@ -22,14 +27,18 @@ export default function Login() {
       return <Navigate to="trial" replace />;
     },
     onError: (error) => {
-      // 'error' is custom error (ie NetworkError, TokenValidationError)
+      // NOTE: 'error' is custom error (ie NetworkError, TokenValidationError)
       console.warn("LOGIN error is", error);
       // setErrorMsg(error.message);
     },
   });
 
+  const handleSubmit = () => {
+    mutation.mutate({ name, email, password });
+  };
+
   return (
-    <>
+    <PageWrapper>
       <h1>LOGIN</h1>
       <div>
         {mutation.isLoading ? (
@@ -44,24 +53,12 @@ export default function Login() {
               </>
             ) : null}
 
-            <LoginForm
-              name={name}
-              setName={setName}
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-            />
-            <button
-              onClick={() => {
-                mutation.mutate({ username: name, email, password });
-              }}
-            >
-              Log In
-            </button>
+            <LoginForm {...formObj} />
+
+            <SubmitButton handleClick={handleSubmit}>Log In</SubmitButton>
           </>
         )}
       </div>
-    </>
+    </PageWrapper>
   );
 }

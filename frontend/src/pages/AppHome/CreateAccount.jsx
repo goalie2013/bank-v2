@@ -3,24 +3,29 @@ import CreateUserForm from "../../components/Form/SignInForm";
 //import { mutateCreateUser } from "../mutations";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { NetworkError } from "../../errors";
 import { AuthContext } from "../../App";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { PageWrapper, BXX } from "../styles";
+import LoginForm from "../../components/Form/LoginForm";
 
-export default function CreateAccount() {
+export default function CreateAccount({ apiService }) {
   console.count("CREATE_ACCOUNT");
 
   const { onLogin } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [data, setData] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const formObj = { name, setName, email, setEmail, password, setPassword };
 
   const mutation = useMutation({
     mutationFn: (formData) => {
       console.log("mutateCreateUser()");
-      return axios.post("http://localhost:5050/auth/register", formData);
+      // return axios.post("http://localhost:5050/auth/register", formData);
+      return apiService.registerUser(formData);
     },
     onSuccess: (data) => {
       console.log("onSuccess data", data);
@@ -56,21 +61,28 @@ export default function CreateAccount() {
   //   event.preventDefault();
   //   mutation.mutate(new FormData(event.target));
   // };
-
-  console.count("data", data);
-  console.log("data", data);
+  const handleSubmit = () => {
+    mutation.mutate({ name, email, password });
+  };
 
   return (
-    <>
-      <h1>Create Account</h1>
-      <div>
+    <PageWrapper>
+      <h1 style={{ fontWeight: 900, marginBottom: "0.5rem" }}>
+        Create Account
+      </h1>
+      <h5 style={{ marginTop: "1rem" }}>
+        Already have an accout?{" "}
+        <Link to="/login" className="link">
+          Log In Here
+        </Link>
+      </h5>
+
+      <BXX>
         {mutation.isLoading ? (
           <h3>"Creating User..."</h3>
         ) : mutation.isSuccess ? (
           <>
             <div>Success!</div>
-            <div>{data ? data.message : null}</div>
-            {/* <Navigate to="/user" replace />; */}
           </>
         ) : (
           <>
@@ -82,24 +94,14 @@ export default function CreateAccount() {
               </>
             ) : null}
 
-            <CreateUserForm
-              name={name}
-              setName={setName}
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-            />
-            <button
-              onClick={() => {
-                mutation.mutate({ name, email, password });
-              }}
-            >
-              Create User
-            </button>
+            {/* <CreateUserForm {...formObj} /> */}
+            <SubmitButton handleClick={handleSubmit}>
+              Create Account
+            </SubmitButton>
+            <LoginForm {...formObj} />
           </>
         )}
-      </div>
-    </>
+      </BXX>
+    </PageWrapper>
   );
 }

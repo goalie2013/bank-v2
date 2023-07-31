@@ -1,14 +1,21 @@
+import { useContext, useEffect } from "react";
 import NotFound from "../NotFound";
-import { Title } from "./styles";
+import { PageWrapper, Title } from "../styles";
+import { AuthContext } from "../../App";
 
 export default function UserHome({ data }) {
   console.log("UserHome Component");
 
   console.log("data", data);
   const { name, email } = data;
+  const { handleSuccess } = useContext(AuthContext);
+
+  useEffect(() => {
+    handleSuccess();
+  }, []);
 
   return (
-    <>
+    <PageWrapper>
       <Title className="home">USER HOME</Title>
       {!data ? (
         <NotFound />
@@ -29,6 +36,6 @@ export default function UserHome({ data }) {
           ?transaction id?, ) ??{" "}
         </li>
       </ul>
-    </>
+    </PageWrapper>
   );
 }

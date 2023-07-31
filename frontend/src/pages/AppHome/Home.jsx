@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 // import { GoogleLogin } from "react-google-login";
-import LogoutButton from "../../components/LogoutButton";
+import LogoutButton from "../../components/Buttons/LogoutButton";
 import { Navigate, useOutletContext } from "react-router";
 import { useCheckUserAuth } from "./hook";
 import { useNavigate } from "react-router-dom";
+import { PageWrapper } from "../styles";
 
 //TODO: change useEffect to useContext like in Header.jsx
 //TODO: (Fake) Counter showing how much money has been transacted in app
@@ -67,7 +68,7 @@ export default function Home() {
   data && data.data ? navigate("/user") : null;
 
   return (
-    <>
+    <PageWrapper>
       {data &&
         (data.data ? (
           <>
@@ -99,6 +100,6 @@ export default function Home() {
             </ul>
           </>
         ))}
-    </>
+    </PageWrapper>
   );
 }
