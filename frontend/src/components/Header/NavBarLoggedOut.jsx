@@ -1,19 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
+import { activeLinkStyles, Header, LogoLink } from "./headerStyles";
+import "./Header.css";
 
 export default function NavBarLoggedOut() {
   console.log("NavBarLoggedOut");
 
-  const activeLinkStyles = {
-    fontWeight: "bold",
-    textDecoration: "underline",
-    color: "#161616",
-  };
-
   return (
-    <header>
-      <Link className="site-logo" to="/">
-        #BetterBank
-      </Link>
+    <Header>
+      <LogoLink to="/">#BetterBank</LogoLink>
       <nav>
         <NavLink
           to="/login"
@@ -27,13 +21,13 @@ export default function NavBarLoggedOut() {
         >
           Create Account
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="about"
           style={({ isActive }) => (isActive ? activeLinkStyles : null)}
+          className="nav-link"
         >
           About
-        </NavLink>
-        {/* <Link to="/trial">Trial</Link> */}
+        </NavLink> */}
         {/* {!token ? (
           <button type="button" onClick={onLogin}>
             Login
@@ -44,6 +38,6 @@ export default function NavBarLoggedOut() {
           </button>
         )} */}
       </nav>
-    </header>
+    </Header>
   );
 }

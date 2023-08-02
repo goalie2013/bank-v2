@@ -9,6 +9,7 @@ import { AuthContext } from "../../App";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import { PageWrapper, BXX } from "../styles";
 import LoginForm from "../../components/Form/LoginForm";
+import ApiService from "../../service";
 
 export default function CreateAccount({ apiService }) {
   console.count("CREATE_ACCOUNT");
@@ -25,7 +26,7 @@ export default function CreateAccount({ apiService }) {
     mutationFn: (formData) => {
       console.log("mutateCreateUser()");
       // return axios.post("http://localhost:5050/auth/register", formData);
-      return apiService.registerUser(formData);
+      return ApiService.registerUser(formData);
     },
     onSuccess: (data) => {
       console.log("onSuccess data", data);

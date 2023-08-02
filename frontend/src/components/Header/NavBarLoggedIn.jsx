@@ -1,20 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 import LogoutButton from "../Buttons/LogoutButton";
+import { activeLinkStyles, Header, LogoLink } from "./headerStyles";
+import "./Header.css";
 
 export default function NavBarLoggedIn() {
   console.log("NavBarLoggedIn");
 
-  const activeLinkStyles = {
-    fontWeight: "bold",
-    textDecoration: "underline",
-    color: "#161616",
-  };
-
   return (
-    <header>
-      <Link className="site-logo" to="user">
-        #BetterBank
-      </Link>
+    <Header>
+      <LogoLink to="user">#BetterBank</LogoLink>
       <nav>
         <NavLink
           to="history"
@@ -28,7 +22,6 @@ export default function NavBarLoggedIn() {
         >
           About
         </NavLink>
-        {/* <Link to="/trial">Trial</Link> */}
         {/* {!token ? (
           <button type="button" onClick={onLogin}>
             Login
@@ -40,6 +33,6 @@ export default function NavBarLoggedIn() {
         )} */}
         <LogoutButton />
       </nav>
-    </header>
+    </Header>
   );
 }

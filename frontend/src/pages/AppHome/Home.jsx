@@ -1,28 +1,25 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
 // import { GoogleLogin } from "react-google-login";
-import LogoutButton from "../../components/Buttons/LogoutButton";
 import { Navigate, useOutletContext } from "react-router";
 import { useCheckUserAuth } from "./hook";
 import { useNavigate } from "react-router-dom";
 import { PageWrapper } from "../styles";
+import { AuthContext } from "../../App";
 
 //TODO: change useEffect to useContext like in Header.jsx
-//TODO: (Fake) Counter showing how much money has been transacted in app
+//TODO: (Fake) Counter showing how much money has been transacted in total in app
 
 export default function Home() {
   console.count("HOME");
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
 
-  // const [hasToken, setHasToken] = useState(true);
-  // const [data, setData] = useState(true);
-  // const [isFetching, setIsFetching] = useState("");
   const token = localStorage.getItem("token");
   const Title = styled.h1`
-    font-size: 3rem;
+    font-size: 5rem;
     text-align: center;
     color: #bf4f32;
-    border: 5px solid blue;
   `;
 
   // const { data, isFetching, status } = useOutletContext();
@@ -63,24 +60,21 @@ export default function Home() {
   // };
   // console.count("data");
 
-  const data = useCheckUserAuth();
-  console.log("data", data);
-  data && data.data ? navigate("/user") : null;
+  // const data = useCheckUserAuth();
+  // console.log("data", data);
+  // data && data.data ? navigate("/user") : null;
+
+  let data = "data";
+  isLoggedIn ? navigate("/user") : null;
 
   return (
     <PageWrapper>
       {data &&
-        (data.data ? (
-          <>
-            <Title>HOME</Title>
-            <LogoutButton />
-            <h3>Token: {token}</h3>
-          </>
-        ) : data.isFetching ? (
+        (data.isFetching ? (
           <h1>Refreshing...</h1>
         ) : (
           <>
-            <h2>Not Logged In</h2>
+            <Title>Better Bank</Title>
             <ul>
               <li>
                 offers convenience and accessibility as you can access your

@@ -23,9 +23,12 @@ import ApiService from "./service";
 // Context data gets DELETED AFTER PAGE REFRESH
 export const AuthContext = createContext(null);
 export const ThemeContext = createContext(null);
-const apiService = new ApiService();
+
+ApiService.hey();
 
 function App() {
+  const apiService = new ApiService();
+
   return (
     <BrowserRouter>
       <AuthProvider>

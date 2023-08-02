@@ -1,21 +1,26 @@
 import axios from "axios";
 
 class ApiService {
-  async getProtectedRoute(token) {
-    // Fetch toys from API
-    const response = await axios.get("http://localhost:5050/api/protected", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    return data;
+  static async getProtectedRoute(token) {
+    try {
+      return await axios.get("http://localhost:5050/api/protected", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
-  registerUser(formData) {
-    axios.post("http://localhost:5050/auth/register", formData);
+  static hey() {
+    console.log("hey there this is a STATIC METHOD");
+  }
+
+  static registerUser(formData) {
+    return axios.post("http://localhost:5050/auth/register", formData);
   }
 
   loginUser(formData) {
-    axios.post("http://localhost:5050/auth/login", formData);
+    return axios.post("http://localhost:5050/auth/login", formData);
   }
 }
 
